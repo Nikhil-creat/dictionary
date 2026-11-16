@@ -32,7 +32,7 @@ async function copyDir(src, dst, stats) {
     if (e.name.endsWith('.map')) continue; // never ship source maps
     if (esbuild && (e.name.endsWith('.js') || e.name.endsWith('.css'))) {
       const code = await fs.readFile(s, 'utf8');
-      const r = await esbuild.transform(code, { loader: e.name.endsWith('.js') ? 'js' : 'css', minify: true, target: 'es2020', sourcemap: false, legalComments: 'none' });
+      const r = await esbuild.transform(code, { loader: e.name.endsWith('.js') ? 'js' : 'css', minify: true, target: 'es2022', sourcemap: false, legalComments: 'none' });
       await fs.writeFile(d, r.code);
       stats.min += 1;
     } else await fs.copyFile(s, d);
