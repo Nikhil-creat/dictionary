@@ -95,6 +95,13 @@ const home = {
   <span class="eyebrow">Built by</span>
   <h2>${esc(a.name)}</h2>
   <p class="lead">${esc(a.role)}. Final-year B.Tech Computer Science &amp; Engineering student in Warangal, Telangana, with a growing credential log in cloud, security, data and AI. <a class="link" href="/about">See the credentials and projects →</a></p>
+  <div class="sig-grid" aria-label="The builder's name in eight scripts">${['te', 'hi', 'ta', 'ar', 'zh', 'ja', 'ko', 'ru'].map((k) => `<div class="sig"><b lang="${k}">${['nikhil', 'chary', 'sriramoju'].map((n) => NAMES[n].scripts[k]).join(' ')}</b><span>${LM[k].n}</span></div>`).join('')}</div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><div class="stat">${CERTS.length}</div><div class="stat-l">credentials listed in detail (33+ logged)</div></div>
+    <div class="card"><div class="stat">9</div><div class="stat-l">flagship AI, data and systems projects</div></div>
+    <div class="card"><div class="stat">4</div><div class="stat-l">cooperating AI agents inside this product</div></div>
+  </div>
+  <div class="row"><a class="btn primary" href="/agents">Watch the agents work →</a><a class="btn" href="/about">Credentials &amp; projects</a></div>
 </div></section>
 
 <section class="block faq"><div class="wrap">
@@ -404,6 +411,36 @@ const wotd = {
 </div>`,
 };
 
+
+/* ============================== AGENTS ============================== */
+const agentsPage = {
+  path: '/agents', slug: 'agents', crumbs: crumb([{ name: 'Agentic AI demo', path: '/agents' }]),
+  title: 'Agentic AI demo — watch four agents answer | Dictionary',
+  description: 'Run a live four-agent pipeline (router, retriever, specialist, validator) and see every hand-off, the evidence retrieved and a sentence-by-sentence grounding check.',
+  og: 'og-features.png', priority: 0.8, changefreq: 'monthly', styles: ['lookup.css'], scripts: ['agents.js'],
+  jsonld: () => [{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Dictionary agent pipeline demo', url: '__SITE__/agents', applicationCategory: 'EducationalApplication', operatingSystem: 'Any (web browser)', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: { '@type': 'Person', name: a.name } }],
+  body: () => `
+<div class="wrap page-top">
+  __CRUMBS__
+  <h1>Agentic AI, with the lid off</h1>
+  <p class="lead">Ask for a word or a name. Four agents hand work to each other and you can see every step: what was retrieved, what was drafted, and which sentences the validator could not support.</p>
+  <form id="aform" class="agent-form" autocomplete="off"><input id="aq" type="text" maxlength="120" placeholder="Nikhil · serendipity · What does Chary mean?" aria-label="Ask the agents"><button class="btn primary">Run agents</button></form>
+  <p id="ex" aria-label="Examples"></p>
+  <p class="muted" id="mode"></p>
+  <ol class="steps" id="trace" aria-live="polite"></ol>
+  <section class="card" id="answer" hidden>
+    <div class="row"><span class="chip" id="ans-tag"></span><span class="muted" id="ans-score"></span></div>
+    <p id="ans-text" style="margin-top:12px"></p>
+    <p class="muted">Highlighted sentences scored below the grounding threshold, so they are flagged rather than trusted.</p>
+  </section>
+  <div class="prose"><h2>What is real here</h2><ul>
+    <li><b>Routing, retrieval and validation run in your browser</b> on the curated names lexicon and the Wiktionary-derived dictionary.</li>
+    <li><b>The drafting step</b> is deterministic until you add a free Groq or Gemini key on the Lookup page; then a model drafts and the same validator checks it.</li>
+    <li><b>The production backend</b> (FastAPI) runs the same hand-offs with hybrid BM25 + vector retrieval and a stricter validator. See <a class="link" href="/architecture">architecture</a> and <a class="link" href="/security">security</a>.</li>
+  </ul></div>
+</div>`,
+};
+
 /* ============================== PRIVACY ============================== */
 const privacy = {
   path: '/privacy', slug: 'privacy', crumbs: crumb([{ name: 'Privacy', path: '/privacy' }]),
@@ -445,4 +482,4 @@ const notFound = {
 </div>`,
 };
 
-export const pages = [home, lookup, namesIndex, ...namePages, wotd, features, architecture, security, about, privacy, notFound];
+export const pages = [home, lookup, namesIndex, ...namePages, wotd, agentsPage, features, architecture, security, about, privacy, notFound];

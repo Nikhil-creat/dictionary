@@ -103,3 +103,11 @@ a.card:hover{transform:translateY(-3px);border-color:rgba(94,240,255,.5)}
 .hq button{padding:0 22px;border-radius:99px;background:linear-gradient(90deg,var(--vi),#4d7dff);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .muted{color:var(--mute);font-size:12.5px}
+.steps{list-style:none;padding:0;margin:20px 0;display:grid;gap:12px}
+.step{display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:center;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.step-n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);font-weight:700;color:var(--cy)}
+.step h3{margin:0 0 2px;font-size:15px}.step p{margin:0;font-size:13.5px}
+.agent-form{display:flex;gap:10px;flex-wrap:wrap}.agent-form input{flex:1;min-width:200px;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:inherit;font:inherit}
+.unsup{background:rgba(255,77,141,.18);border-radius:4px;padding:0 2px}
+.sig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+.sig{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--glass)}.sig b{display:block;font-size:20px}.sig span{font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}

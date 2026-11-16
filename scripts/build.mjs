@@ -52,7 +52,7 @@ const businessLd = () => {
   };
 };
 
-const NAV = [['/names', 'Names'], ['/features', 'Features'], ['/architecture', 'Architecture'], ['/security', 'Security'], ['/about', 'About']];
+const NAV = [['/names', 'Names'], ['/agents', 'Agents'], ['/features', 'Features'], ['/architecture', 'Architecture'], ['/security', 'Security'], ['/about', 'About']];
 
 function header(page) {
   const here = (p) => (page.path === p || page.path.startsWith(p + '/') ? ' aria-current="page"' : '');
@@ -70,7 +70,7 @@ function footer() {
   return `<footer class="site-footer"><div class="wrap">
   <div class="foot">
     <div><a class="brand" href="/"><img src="/favicon.svg" width="30" height="30" alt="" loading="lazy" decoding="async">${esc(site.name)}</a><p>${esc(site.tagline)}. Definitions, etymology and name meanings in ten languages, with AI that shows its sources.</p></div>
-    <div><h2>Explore</h2><ul><li><a href="/lookup">Lookup</a></li><li><a href="/names">Name meanings</a></li><li><a href="/word-of-the-day">Word of the day</a></li><li><a href="/features">Features</a></li></ul></div>
+    <div><h2>Explore</h2><ul><li><a href="/lookup">Lookup</a></li><li><a href="/names">Name meanings</a></li><li><a href="/word-of-the-day">Word of the day</a></li><li><a href="/agents">Agentic AI demo</a></li><li><a href="/features">Features</a></li></ul></div>
     <div><h2>Project</h2><ul><li><a href="/architecture">Architecture</a></li><li><a href="/security">Security &amp; limitations</a></li><li><a href="${site.repo}" rel="noopener">Source on GitHub</a></li></ul></div>
     <div><h2>Connect</h2><ul><li><a href="/about">About ${esc(a.name.split(' ')[0])}</a></li><li><a href="${a.github}" rel="me noopener">GitHub</a></li><li><a href="${a.linkedin}" rel="me noopener">LinkedIn</a></li><li><a href="mailto:${a.email}">Email</a></li></ul></div>
   </div>
@@ -107,6 +107,7 @@ function render(page) {
 <meta name="theme-color" content="${site.themeColor}">
 <meta name="color-scheme" content="dark">
 <meta name="author" content="${esc(site.author.name)}">
+<meta name="keywords" content="${esc((page.keywords || site.keywords).join(', '))}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(page.title)}">

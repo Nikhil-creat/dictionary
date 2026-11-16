@@ -121,6 +121,18 @@ On GitHub: that repo → **Settings → Pages → Build and deployment → Sourc
 `SITE_URL=https://nikhil-creat.github.io` and deploys it. After that, push to both: `git push origin main && git push pages main`.
 GitHub Pages cannot send the security headers in `vercel.json` (CSP, HSTS); Vercel remains the recommended production host.
 
+## GitHub repo description, topics and SEO keywords
+
+**About → Description** (paste into the gear icon beside "About" on the repo page):
+
+> Dictionary: an intelligent multi-modal dictionary with word definitions, etymology and name meanings in 10 languages. Four-agent AI pipeline, hybrid RAG, on-device OCR and a Groq + Gemini chatbot. FastAPI, Docker, Vercel.
+
+**Website:** your Vercel URL.  **Topics** (add all):
+`dictionary` `multilingual` `name-meanings` `etymology` `agentic-ai` `rag` `retrieval-augmented-generation` `llm` `groq` `gemini` `ocr` `computer-vision` `fastapi` `docker` `vercel` `threejs` `javascript` `python` `nlp` `portfolio`
+
+**Site keywords** live in `site.config.mjs` (`keywords`) and are rendered on every page. Search engines mostly ignore the keywords tag,
+so the titles, descriptions, headings and structured data matter more; the keywords are a convenience for other tools.
+
 ## 3. Deploy the front end on Vercel
 
 1. vercel.com → **Add New… → Project** → **Import** your `dictionary` repo.
