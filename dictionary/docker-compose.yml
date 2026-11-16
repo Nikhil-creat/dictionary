@@ -1,0 +1,53 @@
+# Local / staging stack:  cp .env.example backend/.env && docker compose up --build   →  http://localhost:3000
+services:
+  web:
+    build: { context: ., dockerfile: Dockerfile.web, args: { SITE_URL: "http://localhost:3000", API_BASE: "" } }
+    ports: ["3000:80"]
+    depends_on: [api]
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_URL: http://qdrant:6333
+      VISION_URL: http://vision:8001
+      CORS_ORIGINS: http://localhost:3000
+    depends_on: [redis, qdrant]
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  vision:
+    build: ./vision
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/dev/shm, /tmp]        # image frames only ever live in memory
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    volumes: [qdrant:/qdrant/storage]
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dictionary
+      POSTGRES_USER: dictionary
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in your shell or a root .env file}
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+
+volumes: { qdrant: {}, pg: {} }

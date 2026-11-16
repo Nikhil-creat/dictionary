@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+*.map
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+backend/data/*.sqlite
+.DS_Store
