@@ -1,0 +1,29 @@
+name: pages
+# Deploys the built site to GitHub Pages. Only runs in a user-site repo (name ends in .github.io) because the site
+# uses root-absolute paths and must be served from the root of its domain.
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+permissions: { contents: read, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  build:
+    if: endsWith(github.repository, '.github.io')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --no-audit --no-fund
+      - run: SITE_URL="https://${{ github.repository_owner }}.github.io" npm run build
+        env: { SITE_URL: "https://${{ github.repository_owner }}.github.io" }
+      - run: npm run verify
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4
