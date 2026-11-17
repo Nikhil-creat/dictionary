@@ -17,7 +17,7 @@ async function resolves(urlPath) {
 }
 
 const files = await walk(dist);
-const htmls = files.filter((f) => f.endsWith('.html'));
+const htmls = files.filter((f) => f.endsWith('.html') && path.basename(f) !== 'offline.html'); // offline.html is the PWA fallback shell (noindex, intentionally minimal)
 const titles = new Map(), descs = new Map();
 const BAD_TITLE = /\b(react app|vite|create react app|untitled|document|white|lorem|placeholder)\b/i;
 const PLACEHOLDER = /lorem ipsum|your text here|coming soon|todo|placeholder text|example\.com|yourdomain/i;

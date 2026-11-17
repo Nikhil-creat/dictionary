@@ -539,7 +539,43 @@ Object.assign(NAMES, {
    "es": "gracia, favor",
    "ru": "милость, благодать"
   }
- }
+ },
+  nani: {
+    t: 'Nani', origin: 'Telugu నాని (affectionate pet name); also Hindi/Urdu nānī', fam: 'Dravidian / Indo-Aryan', en: 'pet name, "dear one" (Telugu); maternal grandmother (Hindi/Urdu)', conf: 'likely',
+    note: 'In Telugu-speaking regions Nani is mostly an affectionate short name or nickname given to a child and often kept as a stage name; it is not a single fixed dictionary word. In Hindi and Urdu, nānī means maternal grandmother. Meaning depends on usage.',
+    scripts: { te: 'నాని', hi: 'नानी', ta: 'நானி', ar: 'ناني', zh: '纳尼', ja: 'ナニ', ko: '나니', ru: 'Нани' },
+    gloss: { te: 'ముద్దు పేరు', hi: 'प्यार का नाम; नानी', ta: 'செல்லப் பெயர்', ar: 'اسم تدليل', zh: '昵称、爱称', ja: '愛称', fr: 'petit nom affectueux', es: 'apodo cariñoso', ru: 'ласковое прозвище' },
+  },
+  ravi: {
+    t: 'Ravi', origin: 'Sanskrit रवि (ravi)', fam: 'Indo-Aryan', en: 'the sun', conf: 'verified', note: 'A classical Sanskrit word for the sun, widely used across India as a masculine name.',
+    scripts: { te: 'రవి', hi: 'रवि', ta: 'ரவி', ar: 'رافي', zh: '拉维', ja: 'ラヴィ', ko: '라비', ru: 'Рави' },
+    gloss: { te: 'సూర్యుడు', hi: 'सूर्य', ta: 'சூரியன்', ar: 'الشمس', zh: '太阳', ja: '太陽', fr: 'le soleil', es: 'el sol', ru: 'солнце' },
+  },
+  kiran: {
+    t: 'Kiran', origin: 'Sanskrit किरण (kiraṇa)', fam: 'Indo-Aryan', en: 'ray of light', conf: 'verified', note: 'Used for both men and women across India.',
+    scripts: { te: 'కిరణ్', hi: 'किरण', ta: 'கிரண்', ar: 'كيران', zh: '基兰', ja: 'キラン', ko: '키란', ru: 'Киран' },
+    gloss: { te: 'కాంతి కిరణం', hi: 'प्रकाश की किरण', ta: 'ஒளிக்கதிர்', ar: 'شعاع ضوء', zh: '光线', ja: '光線', fr: 'rayon de lumière', es: 'rayo de luz', ru: 'луч света' },
+  },
+  anil: {
+    t: 'Anil', origin: 'Sanskrit अनिल (anila)', fam: 'Indo-Aryan', en: 'wind, air', conf: 'verified', note: 'Anila is also a name of the wind deity Vayu.',
+    scripts: { te: 'అనిల్', hi: 'अनिल', ta: 'அனில்', ar: 'أنيل', zh: '阿尼尔', ja: 'アニル', ko: '아닐', ru: 'Анил' },
+    gloss: { te: 'గాలి', hi: 'वायु, हवा', ta: 'காற்று', ar: 'الريح', zh: '风', ja: '風', fr: 'vent, air', es: 'viento', ru: 'ветер' },
+  },
+  teja: {
+    t: 'Teja', origin: 'Sanskrit तेजस् (tejas)', fam: 'Indo-Aryan', en: 'radiance, brilliance', conf: 'verified', note: 'Popular in Telugu-speaking states, often as Teja or Tejaswi.',
+    scripts: { te: 'తేజ', hi: 'तेज', ta: 'தேஜா', ar: 'تيجا', zh: '特贾', ja: 'テージャ', ko: '테자', ru: 'Теджа' },
+    gloss: { te: 'తేజస్సు, కాంతి', hi: 'तेज, चमक', ta: 'ஒளி, பிரகாசம்', ar: 'إشراق', zh: '光辉', ja: '輝き', fr: 'éclat', es: 'resplandor', ru: 'сияние' },
+  },
+  harsha: {
+    t: 'Harsha', origin: 'Sanskrit हर्ष (harṣa)', fam: 'Indo-Aryan', en: 'joy, delight', conf: 'verified', note: 'Also the name of the 7th-century emperor Harsha of Kanauj.',
+    scripts: { te: 'హర్ష', hi: 'हर्ष', ta: 'ஹர்ஷா', ar: 'هارشا', zh: '哈莎', ja: 'ハルシャ', ko: '하르샤', ru: 'Харша' },
+    gloss: { te: 'ఆనందం', hi: 'आनंद, हर्ष', ta: 'மகிழ்ச்சி', ar: 'فرح', zh: '喜悦', ja: '喜び', fr: 'joie', es: 'alegría', ru: 'радость' },
+  },
+  sai: {
+    t: 'Sai', origin: 'Indian usage, popularised by Sai Baba of Shirdi (etymology debated)', fam: 'Indian (disputed)', en: 'saint, revered one (as used in Sai Baba)', conf: 'likely', note: 'Very common in Telugu states after Sai Baba of Shirdi. The etymology of "Sai" is debated; one account derives it from Persian sā\'ī, "mendicant".',
+    scripts: { te: 'సాయి', hi: 'साई', ta: 'சாய்', ar: 'ساي', zh: '赛', ja: 'サイ', ko: '사이', ru: 'Саи' },
+    gloss: { te: 'పూజనీయుడు, సాధువు', hi: 'संत, पूज्य', ta: 'துறவி', ar: 'قديس', zh: '圣者', ja: '聖者', fr: 'saint, vénéré', es: 'santo, venerado', ru: 'святой' },
+  }
 });
 for (const [key, v] of Object.entries(NAMES)) v.key = key;
 

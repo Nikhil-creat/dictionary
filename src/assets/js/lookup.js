@@ -195,6 +195,9 @@ async function search(raw) {
   }
   S.names.forEach((n) => { if (n.hit) addHist('name', n.hit.t, `${n.hit.en} — ${n.hit.origin}`); });
   paint();
+  // Unknown names: ask the AI automatically when the server proxy is live (or the visitor has added keys).
+  await bot.ready;
+  if (S.q === q && bot.hasKeys()) S.names.forEach((n, i) => { if (!n.hit && n.raw.length > 1 && /\p{L}/u.test(n.raw)) aiResolveName(i, true); });
 }
 $('#bar').addEventListener('submit', (e) => { e.preventDefault(); search($('#q').value); });
 $('#tabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setTab(b.dataset.tab); });
@@ -236,17 +239,29 @@ async function aiEnrichWord() {
   try { const r = await bot.enrichWord(w, ctxJSON()); S.ai[key] = { d: r.d, provider: r.provider, status: r.status }; } catch (e) { S.ai[key] = { err: e.message }; }
   paint();
 }
-async function aiResolveName() {
-  const tk = S.names[S.nt], k = tk.raw.toLowerCase();
+const NC = 'dict:nm:';
+async function aiResolveName(idx = S.nt, quiet = false) {
+  const tk = S.names[idx]; if (!tk) return;
+  const k = tk.raw.toLowerCase();
+  if (S.ai[k]?.loading) return;
+  try { const c = JSON.parse(localStorage.getItem(NC + k) || 'null'); if (c?.d) { S.ai[k] = c; paint(); return; } } catch { /* ignore */ }
   S.ai[k] = { loading: true }; paint();
-  try { const r = await bot.resolveName(tk.raw, ctxJSON()); S.ai[k] = { d: r.d, provider: r.provider, status: r.status }; } catch (e) { S.ai[k] = { err: e.message }; }
+  try {
+    const r = await bot.resolveName(tk.raw, ctxJSON());
+    S.ai[k] = { d: r.d, provider: r.provider, status: r.status };
+    try { localStorage.setItem(NC + k, JSON.stringify(S.ai[k])); } catch { /* ignore */ }
+  } catch (e) { S.ai[k] = quiet ? { err: 'AI is unavailable right now. ' + e.message } : { err: e.message }; }
   paint();
 }
 const md = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
 function pushMsg(cls, html, meta) { const d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html + (meta ? `<small>${esc(meta)}</small>` : ''); $('#bmsgs').appendChild(d); $('#bmsgs').scrollTop = 1e9; return d; }
 function chips() {
   const s = bot.status(), g = $('#cG'), m = $('#cM');
-  if (s.server) { g.textContent = 'Server · RAG'; g.className = 'chip v'; m.textContent = 'Groq ⇄ Gemini'; m.className = 'chip v'; return; }
+  if (s.server) {
+    const pv = s.providers;
+    g.textContent = pv ? `Groq · ${pv.groq ? 'live' : 'off'}` : 'Server · RAG'; g.className = 'chip ' + (!pv || pv.groq ? 'v' : '');
+    m.textContent = pv ? `Gemini · ${pv.gemini ? 'live' : 'off'}` : 'Groq ⇄ Gemini'; m.className = 'chip ' + (!pv || pv.gemini ? 'v' : ''); return;
+  }
   const f = (el, n, x) => { el.textContent = !x.on ? `${n} · off` : x.cooling ? `${n} · cooling` : x.model ? `${n} · ${x.model.slice(0, 22)}` : `${n} · detecting`; el.className = 'chip ' + (!x.on ? '' : x.cooling ? 'l' : 'v'); };
   f(g, 'Groq', s.groq); f(m, 'Gemini', s.gem);
 }
@@ -276,7 +291,7 @@ $('#bform').addEventListener('submit', (e) => { e.preventDefault(); const i = $(
 addEventListener('keydown', (e) => { if (e.key === 'Escape') openBot(false); });
 if (bot.serverMode) $('#bgear').hidden = true;
 chips();
-if (!bot.serverMode && bot.hasKeys()) bot.detectAll(toast).then(chips);
+bot.ready.then(() => { chips(); if (!bot.serverMode && bot.hasKeys()) bot.detectAll(toast).then(chips); if (bot.serverMode) $('#bgear').hidden = true; });
 
 /* ================= voice, OCR, object recognition (all on-device) ================= */
 const loadScript = (src) => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load a vision library')); document.head.appendChild(s); });

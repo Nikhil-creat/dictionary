@@ -6,7 +6,18 @@
 import { ss, sleep, clean } from './lexicon.js';
 
 const API = (document.querySelector('meta[name="dict-api-base"]')?.content || '').replace(/\/$/, '');
-export const serverMode = Boolean(API);
+export let serverMode = Boolean(API);
+export let serverProviders = null; // { groq, gemini } booleans when the Vercel functions are configured
+// Auto-detect the built-in Vercel serverless proxy (/api/health). Keys stay in Vercel env vars; the browser never sees them.
+export const ready = (async () => {
+  if (serverMode || !/^https?:$/.test(location.protocol)) return;
+  try {
+    const r = await fetch('/api/health', { cache: 'no-store', signal: AbortSignal.timeout(4000) });
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return;
+    const j = await r.json();
+    if (j.ok && (j.providers?.groq || j.providers?.gemini)) { serverProviders = j.providers; serverMode = true; }
+  } catch { /* no proxy: browser-key mode */ }
+})();
 const GROQ = 'https://api.groq.com/openai/v1';
 const GEM = 'https://generativelanguage.googleapis.com/v1beta';
 
@@ -27,7 +38,7 @@ export function setKeys(groq, gem) {
 export const hasKeys = () => serverMode || Boolean(BOT.keys.groq || BOT.keys.gem);
 export function status() {
   const f = (k) => ({ on: Boolean(BOT.keys[k]), model: BOT.model[k], cooling: Date.now() < BOT.brk[k].until });
-  return { server: serverMode, groq: f('groq'), gem: f('gem') };
+  return { server: serverMode, providers: serverProviders, groq: f('groq'), gem: f('gem') };
 }
 
 /* ---------- model auto-detection (no hard-coded model names) ---------- */

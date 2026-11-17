@@ -32,9 +32,17 @@ async function copyDir(src, dst, stats) {
     if (e.name.endsWith('.map')) continue; // never ship source maps
     if (esbuild && (e.name.endsWith('.js') || e.name.endsWith('.css'))) {
       const code = await fs.readFile(s, 'utf8');
-      const r = await esbuild.transform(code, { loader: e.name.endsWith('.js') ? 'js' : 'css', minify: true, target: 'es2022', sourcemap: false, legalComments: 'none' });
-      await fs.writeFile(d, r.code);
-      stats.min += 1;
+      try {
+        // es2022 allows top-level await in the ES modules we ship; format esm keeps the scripts as modules
+        const isJs = e.name.endsWith('.js');
+        const r = await esbuild.transform(code, { loader: isJs ? 'js' : 'css', minify: true, target: 'es2022', ...(isJs ? { format: 'esm' } : {}), sourcemap: false, legalComments: 'none' });
+        await fs.writeFile(d, r.code);
+        stats.min += 1;
+      } catch (err) {
+        // never fail a deploy over minification: ship the readable file and say so
+        console.warn(`! could not minify ${e.name} (${String(err.message).split('\n')[0]}), copied as-is`);
+        await fs.writeFile(d, code);
+      }
     } else await fs.copyFile(s, d);
   }
 }
@@ -92,8 +100,8 @@ function render(page) {
   const ogAlt = `${site.name}: ${page.title.split('|')[0].trim()}`;
   const ld = [...(page.jsonld ? page.jsonld() : []), ...(crumbLd ? [crumbLd] : []), ...(page.business ? [businessLd()].filter(Boolean) : [])];
   const ldJson = ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/__SITE__/g, SITE).replace(/</g, '\\u003c')}</script>`).join('\n');
-  const styles = ['site.css', ...(page.hero ? ['hero.css'] : []), ...(page.styles || [])];
-  const scripts = ['site.js', ...(page.hero ? ['hero.js'] : []), ...(page.scripts || [])];
+  const styles = ['site.css', 'fx.css', ...(page.hero ? ['hero.css'] : []), ...(page.styles || [])];
+  const scripts = ['site.js', 'fx.js', ...(page.hero ? ['hero.js'] : []), ...(page.scripts || [])];
   const body = page.body().replace('__CRUMBS__', crumbHtml);
   return `<!doctype html>
 <html lang="en">

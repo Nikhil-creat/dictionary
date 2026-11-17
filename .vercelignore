@@ -1,0 +1,6 @@
+backend
+test
+node_modules
+.github
+*.md
+!README.md

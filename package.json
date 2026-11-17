@@ -1,20 +1,26 @@
 {
   "name": "dictionary",
   "version": "1.0.0",
-  "description": "Dictionary — an intelligent multi-modal dictionary: definitions, etymology, name meanings in many languages, RAG-grounded AI, on-device OCR.",
+  "description": "Dictionary \u2014 an intelligent multi-modal dictionary: definitions, etymology, name meanings in many languages, RAG-grounded AI, on-device OCR.",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "verify": "node scripts/verify.mjs",
     "dev": "node scripts/build.mjs && node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "icons": "python3 scripts/make-assets.py"
+    "icons": "python3 scripts/make-assets.py",
+    "test:api": "node --test test/api.test.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
   },
-  "repository": { "type": "git", "url": "git+https://github.com/Nikhil-creat/dictionary.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nikhil-creat/dictionary.git"
+  },
   "license": "MIT"
 }

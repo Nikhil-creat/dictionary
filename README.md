@@ -141,6 +141,18 @@ so the titles, descriptions, headings and structured data matter more; the keywo
    automatically.
 4. Open the site and check `/sitemap.xml`, `/robots.txt`, `/llms.txt`, a missing URL (custom 404) and a name page such as `/names/nikhil`.
 
+## 3b. Turn on the AI (free Groq + Gemini keys, server-side)
+
+The repo ships Vercel functions in `api/` (`/api/health`, `/api/chat`, `/api/agents/word`, `/api/agents/name`). They try Groq first and fail over to Gemini on rate limits, errors or long context; models are auto-detected, so no model names are hard-coded.
+
+1. Groq key: https://console.groq.com/keys → Create API Key (free, no card).
+2. Gemini key: https://aistudio.google.com/apikey → Create API key (free tier).
+3. Vercel → your project → Settings → Environment Variables → add `GROQ_API_KEY` and `GEMINI_API_KEY` (Production + Preview, mark Sensitive). One key is enough; both give failover.
+4. Deployments → ⋯ → Redeploy (env vars only apply to new deployments).
+5. Open the site: the header shows `AI · Groq + Gemini`. Unknown names (e.g. "Nani") are then resolved automatically and tagged AI-generated / unverified.
+
+Never put these keys in the repo, in `site.config.mjs` or in any client file. Run `npm run test:api` for the unit tests (mocked network).
+
 ## 4. Custom domain
 
 1. Buy a domain (any registrar).

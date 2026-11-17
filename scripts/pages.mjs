@@ -16,7 +16,7 @@ const faq = [
   ['Where do the definitions come from?', 'English entries come from a Wiktionary-derived corpus (via dictionaryapi.dev). Names come from a curated lexicon where every claim carries a Verified, Likely or Unverified tag. Anything the corpus cannot support is flagged “Unverified / Emerging usage” instead of being invented.'],
   ['Does it work offline?', 'Words you have already looked up are cached in your browser, and the curated name lexicon is bundled, so those work without a connection. New English words need a network request.'],
   ['Is my camera or photo data stored?', 'No. OCR and object recognition run in your browser tab, and images are never uploaded or written to disk. The optional server-side vision service processes frames in memory only and discards them after inference.'],
-  ['Do I need an API key for LexiBot?', 'In the static deployment you paste free Groq and/or Gemini keys; they stay in your tab’s session storage. If the optional backend is deployed, keys live in a server-side vault and the browser never sees them.'],
+  ['Do I need an API key for LexiBot?', 'Not on this site if the owner has added keys to the Vercel project: the built-in /api proxy then holds them in environment variables and the browser never sees them. Otherwise you can paste your own free Groq and/or Gemini keys under ⚙; they stay in your tab’s session storage.'],
 ];
 
 const home = {
@@ -308,7 +308,7 @@ const security = {
   <p class="lead">What is defended, what is not, and where the system is deliberately cautious.</p>
   <section class="block"><h2>Controls</h2><div class="grid g2">
     ${cardStatic('🧱', 'Prompt-injection defences', 'User text is stripped of control and bidi characters, length-capped and wrapped in explicit <user_query> delimiters; retrieved passages are validated before they reach the model, and the system prompt tells the model to treat both as data.')}
-    ${cardStatic('🔑', 'Secret handling', 'Provider keys are read from environment variables on the server and never sent to the browser. In the static deployment, user keys live only in sessionStorage and go straight to the provider.')}
+    ${cardStatic('🔑', 'Secret handling', 'Provider keys are read from environment variables by the Vercel functions (or the optional backend) and never sent to the browser. The functions enforce same-origin requests, input sanitisation, a 20 requests/minute per-visitor limit and a shared hourly budget that protects the free-tier quota. Keys a visitor pastes live only in sessionStorage and go straight to the provider.')}
     ${cardStatic('📵', 'Zero-retention media', 'Camera frames and uploads are processed in memory (or in your own tab) and discarded. Nothing is written to disk or logged.')}
     ${cardStatic('🚦', 'Rate limits & roles', 'A sliding-window limiter runs per IP and per key; guest, user, moderator and admin roles gate the heavier endpoints.')}
     ${cardStatic('🌐', 'Browser hardening', 'Strict content-security-policy, HSTS, no framing, no MIME sniffing, a locked-down referrer policy and permissions policy.')}
@@ -454,7 +454,7 @@ const privacy = {
   <h1>Privacy policy</h1>
   <p class="lead">Short version: there are no accounts, no analytics and no ads. Your lookups stay in your browser.</p>
   <h2>Stored in your browser</h2>
-  <ul><li><b>Lookup cache and flashcards</b> (localStorage) so previous words work offline and cards can be scheduled. Clear it any time in your browser settings.</li><li><b>API keys you paste</b> for Groq or Gemini (sessionStorage) — removed when you close the tab.</li></ul>
+  <ul><li><b>Lookup cache and flashcards</b> (localStorage) so previous words work offline and cards can be scheduled. Clear it any time in your browser settings.</li><li><b>Questions you send to LexiBot or “Resolve with AI”</b> go through this site’s <code>/api</code> functions to Groq or Gemini to be answered. They are not stored by this site, but the providers process them under their own terms. Names the AI resolves are cached in your browser (localStorage).</li><li><b>API keys you paste</b> for Groq or Gemini (sessionStorage) — removed when you close the tab.</li></ul>
   <h2>Sent to third parties</h2>
   <ul><li>An English word you search is sent to <b>dictionaryapi.dev</b> to fetch its entry.</li><li>If you use LexiBot or “Resolve with AI” with your own key, the question and the on-screen word or name context go to <b>Groq</b> and/or <b>Google Gemini</b> under their own terms.</li><li>Fonts are loaded from Google Fonts; the 3D library and on-device OCR and vision models are loaded from the jsDelivr CDN.</li></ul>
   <h2>Camera and photos</h2>
