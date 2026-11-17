@@ -2,6 +2,7 @@
 import { site } from '../site.config.mjs';
 import { NAMES, LM, LM_ORDER } from '../src/assets/js/names-data.js';
 import { CERTS, CERT_ISSUERS } from './credentials.mjs';
+const issuerCounts = Object.entries(CERTS.reduce((m, c) => ((m[c.issuer] = (m[c.issuer] || 0) + 1), m), {})).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const a = site.author;
@@ -97,11 +98,20 @@ const home = {
   <p class="lead">${esc(a.role)}. Final-year B.Tech Computer Science &amp; Engineering student in Warangal, Telangana, with a growing credential log in cloud, security, data and AI. <a class="link" href="/about">See the credentials and projects →</a></p>
   <div class="sig-grid" aria-label="The builder's name in eight scripts">${['te', 'hi', 'ta', 'ar', 'zh', 'ja', 'ko', 'ru'].map((k) => `<div class="sig"><b lang="${k}">${['nikhil', 'chary', 'sriramoju'].map((n) => NAMES[n].scripts[k]).join(' ')}</b><span>${LM[k].n}</span></div>`).join('')}</div>
   <div class="grid g3" style="margin-top:20px">
-    <div class="card"><div class="stat">${CERTS.length}</div><div class="stat-l">credentials listed in detail (33+ logged)</div></div>
+    <div class="card"><div class="stat">${CERTS.length}</div><div class="stat-l">credentials listed, from ${CERT_ISSUERS.length} issuers</div></div>
     <div class="card"><div class="stat">9</div><div class="stat-l">flagship AI, data and systems projects</div></div>
     <div class="card"><div class="stat">4</div><div class="stat-l">cooperating AI agents inside this product</div></div>
   </div>
   <div class="row"><a class="btn primary" href="/agents">Watch the agents work →</a><a class="btn" href="/about">Credentials &amp; projects</a></div>
+</div></section>
+
+<section class="block"><div class="wrap">
+  <span class="eyebrow">Credentials</span>
+  <h2>${CERTS.length} credentials from ${CERT_ISSUERS.length} organisations</h2>
+  <p class="lead">Job simulations, virtual internships and certified courses in software, data, cyber security, cloud, law-tech and AI. Every row, with dates and certificate IDs where printed, is on the <a class="link" href="/about">about page</a>.</p>
+  <div class="row" aria-label="Issuers">${issuerCounts.map(([n, c]) => `<span class="chip c">${esc(n)} · ${c}</span>`).join('')}</div>
+  <div class="grid g3" style="margin-top:18px">${[...CERTS].sort((x, y) => y.date.localeCompare(x.date)).slice(0, 6).map((c) => `<article class="card"><h3>${esc(c.title)}</h3><p class="note">${esc(c.issuer)} · ${esc(c.kind)} · ${esc(c.date)}</p></article>`).join('')}</div>
+  <div class="row"><a class="btn primary" href="/about#credentials">See all ${CERTS.length} credentials →</a></div>
 </div></section>
 
 <section class="block faq"><div class="wrap">
@@ -372,7 +382,7 @@ const about = {
       <li><b>Forage virtual job simulations</b> — JPMorgan Chase, PwC (technology and cyber consulting), Y Combinator, Quantium, Datacom, Latham &amp; Watkins, Clifford Chance</li>
       <li><b>IBM SkillsBuild</b> — Artificial Intelligence Fundamentals</li>
     </ul></div>
-    <h3 style="margin-top:28px">Credential log (${CERTS.length} entries, newest first)</h3>
+    <h3 id="credentials" style="margin-top:28px">Credential log (${CERTS.length} entries, newest first)</h3>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Programme</th><th>Issuer</th><th>Type</th><th>Completed</th></tr></thead><tbody>${certRows}</tbody></table></div>
     <p class="muted">The 33+ total includes earlier certificates that are not in this table yet; the log grows as they are added.</p>
   </section>
