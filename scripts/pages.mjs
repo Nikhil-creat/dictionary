@@ -46,7 +46,7 @@ const home = {
   <div id="fog" aria-hidden="true"></div>
   <form id="hq" action="/lookup" method="get" role="search">
     <label class="sr" for="hq-q">Search a word or a name</label>
-    <input id="hq-q" name="q" type="search" placeholder="Try “serendipity” or a name" maxlength="80" autocomplete="off" spellcheck="false" enterkeyhint="search">
+    <input id="hq-q" name="q" type="search" placeholder="Search a word or name" maxlength="80" autocomplete="off" spellcheck="false" enterkeyhint="search">
     <button type="submit">Search</button>
   </form>
   <div id="rail" aria-label="Hero steps"><button type="button" aria-label="Step 1: Dictionary"></button><button type="button" aria-label="Step 2: Languages"></button><button type="button" aria-label="Step 3: Explore the lookup"></button></div>
@@ -354,7 +354,7 @@ const projects = [
 const issuers = ['Skill India / NASSCOM', 'IBM SkillsBuild', 'UiPath', 'Reliance Foundation', 'Forage', 'Deloitte', 'TATA', 'BCG Platinion', 'Skyscanner', 'Vista', 'AIG', 'EAB', 'LifeArc', 'British Airways', 'Morrison Foerster', 'Ashurst', 'Perkins Coie', 'Latham & Watkins', 'Datacom', 'Clifford Chance', 'PwC', 'JPMorgan Chase', 'Quantium', 'Y Combinator', 'Thiranex', 'PHN Technology', 'Commonwealth Bank', 'Citi', 'BCG', 'BCG X', 'Blackbird', 'DLA Piper', 'Mastercard', 'Johnson & Johnson MedTech', 'Ashurst Perkins Coie'];
 const fmtDate = (d) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 const certsSorted = [...CERTS].sort((x, y) => y.date.localeCompare(x.date));
-const certRows = certsSorted.map((c) => `<tr><td><b>${esc(c.title)}</b>${c.tasks ? `<br><span class="muted">${esc(c.tasks)}</span>` : ''}</td><td>${esc(c.issuer)}<br><span class="muted">via ${esc(c.via)}</span></td><td>${esc(c.kind)}</td><td>${c.period ? esc(c.period) : fmtDate(c.date)}${c.hours ? `<br><span class="muted">${c.hours} h</span>` : ''}${c.id ? `<br><span class="muted">ID ${esc(c.id)}</span>` : ''}</td></tr>`).join('');
+const certRows = certsSorted.map((c) => `<tr><td data-l="Programme"><b>${esc(c.title)}</b>${c.tasks ? `<br><span class="muted">${esc(c.tasks)}</span>` : ''}</td><td data-l="Issuer">${esc(c.issuer)}<br><span class="muted">via ${esc(c.via)}</span></td><td data-l="Type">${esc(c.kind)}</td><td data-l="Completed">${c.period ? esc(c.period) : fmtDate(c.date)}${c.hours ? `<br><span class="muted">${c.hours} h</span>` : ''}${c.id ? `<br><span class="muted">ID ${esc(c.id)}</span>` : ''}</td></tr>`).join('');
 const about = {
   path: '/about', slug: 'about', crumbs: crumb([{ name: 'About', path: '/about' }]),
   title: `About ${a.name} — credentials & projects | Dictionary`,
@@ -383,7 +383,7 @@ const about = {
       <li><b>IBM SkillsBuild</b> — Artificial Intelligence Fundamentals</li>
     </ul></div>
     <h3 id="credentials" style="margin-top:28px">Credential log (${CERTS.length} entries, newest first)</h3>
-    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Programme</th><th>Issuer</th><th>Type</th><th>Completed</th></tr></thead><tbody>${certRows}</tbody></table></div>
+    <div class="tbl-wrap"><table class="tbl stack"><thead><tr><th scope="col">Programme</th><th scope="col">Issuer</th><th scope="col">Type</th><th scope="col">Completed</th></tr></thead><tbody>${certRows}</tbody></table></div>
     <p class="muted">The 33+ total includes earlier certificates that are not in this table yet; the log grows as they are added.</p>
   </section>
   <section class="block"><span class="eyebrow">Projects</span><h2>Selected work</h2>

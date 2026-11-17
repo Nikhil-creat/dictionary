@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { site } from '../site.config.mjs';
 import { pages } from './pages.mjs';
+import { CERTS } from './credentials.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -101,7 +102,7 @@ function render(page) {
   const ld = [...(page.jsonld ? page.jsonld() : []), ...(crumbLd ? [crumbLd] : []), ...(page.business ? [businessLd()].filter(Boolean) : [])];
   const ldJson = ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/__SITE__/g, SITE).replace(/</g, '\\u003c')}</script>`).join('\n');
   const styles = ['site.css', 'fx.css', ...(page.hero ? ['hero.css'] : []), ...(page.styles || [])];
-  const scripts = ['site.js', 'fx.js', ...(page.hero ? ['hero.js'] : []), ...(page.scripts || [])];
+  const scripts = ['site.js', 'fx.js', 'assistant.js', ...(page.hero ? ['hero.js'] : []), ...(page.scripts || [])];
   const body = page.body().replace('__CRUMBS__', crumbHtml);
   return `<!doctype html>
 <html lang="en">
@@ -160,13 +161,23 @@ await fs.mkdir(dist, { recursive: true });
 await copyDir(path.join(root, 'src/assets'), path.join(dist, 'assets'), stats);
 await copyDir(path.join(root, 'public'), dist, stats);
 
+const kb = [];
 const today = new Date().toISOString().slice(0, 10);
 for (const p of pages) {
   const file = p.file || (p.path === '/' ? 'index.html' : p.path.replace(/^\//, '') + '.html');
   const target = path.join(dist, file);
   await fs.mkdir(path.dirname(target), { recursive: true });
-  await fs.writeFile(target, render(p));
+  const html = render(p);
+  await fs.writeFile(target, html);
+  if (!p.noindex) {
+    const main = (html.match(/<main[\s\S]*?<\/main>/) || [''])[0];
+    const text = main.replace(/<(script|style)[\s\S]*?<\/\1>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&[a-z#0-9]+;/g, ' ').replace(/\s+/g, ' ').trim();
+    kb.push({ p: p.path, t: p.title.replace(/\s*[|—-]\s*Dictionary$/, ''), d: p.description, x: text.slice(0, 1400) });
+  }
 }
+// credentials as individual retrievable chunks for the site assistant
+for (const c of CERTS) kb.push({ p: '/about#credentials', t: `Credential: ${c.title} (${c.issuer})`, d: '', x: `${c.title}. Issued by ${c.issuer} via ${c.via}. ${c.kind}, completed ${c.period || c.date}.${c.tasks ? ' Covered: ' + c.tasks + '.' : ''}${c.hours ? ' ' + c.hours + ' hours.' : ''}` });
+await fs.writeFile(path.join(dist, 'assets', 'site-kb.json'), JSON.stringify(kb));
 
 const indexable = pages.filter((p) => !p.noindex && !p.noSitemap);
 await fs.writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>

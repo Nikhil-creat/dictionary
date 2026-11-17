@@ -60,3 +60,6 @@
 .hero.static #sites li{padding:6px 12px;border:1px solid var(--line);border-radius:99px;font-size:11px}
 .hero.static #card{display:none}
 .hero.static #word1{display:none}
+
+@media(max-width:480px){#hq input{padding:14px 16px;font-size:14px}#hq button{padding:0 18px}}
+@media(max-height:520px) and (orientation:landscape){.hero{min-height:520px}#hq{bottom:16px}#hint{display:none}}

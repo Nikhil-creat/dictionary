@@ -29,11 +29,16 @@ if (fine && !reduce) {
   }, { passive: true });
 }
 
-/* scroll reveal */
-const rev = [...document.querySelectorAll('main section, main .card, main .feature, main .tile, main table, main .sig')];
+/* scroll reveal — never hides tall blocks (tables, long lists): only short elements fade in, with a failsafe */
+const rev = [...document.querySelectorAll('main section, main .card, main .feature, main .tile, main .sig, main article')];
 if ('IntersectionObserver' in window && !reduce) {
-  const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .08, rootMargin: '0px 0px -6% 0px' });
-  rev.forEach((el) => { if (el.getBoundingClientRect().top > innerHeight * .9) { el.classList.add('rv'); io.observe(el); } });
+  const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0, rootMargin: '0px 0px -4% 0px' });
+  const pend = [];
+  rev.forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.top > innerHeight * .9 && r.height < innerHeight * 1.2 && !el.querySelector('table,.tbl-wrap')) { el.classList.add('rv'); io.observe(el); pend.push(el); }
+  });
+  setTimeout(() => pend.forEach((el) => el.classList.add('in')), 4000); // failsafe: nothing stays invisible
 }
 
 /* AI status badge (is the serverless proxy live?) */
